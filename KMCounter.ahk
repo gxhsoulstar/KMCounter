@@ -337,7 +337,13 @@ return
 ShowHeatMap:
 {
   ; 一定要先 Show 再设置按键颜色，否则不定时出错  
-  Gui, Show, , % Format("{1} v{2} | {3} - {4}", APPName, ver, L_gui1_当前显示数据, date)
+
+  ; 构建基础标题
+  BaseTitle := Format("{1} v{2} | {3} - {4}", APPName, ver, L_gui1_当前显示数据, date)
+
+  ; 使用基础标题，确保控件存在以便 CtlColors 工作
+  Gui, Show, , %BaseTitle%
+
   ; 先显示文字统计信息
   LV_Modify(1,,, Format("{:.2f} {2}", mouse[date].move,          L_gui1_米),,
                , Format("{:.2f} {2}", mouse.total.move,          L_gui1_米))
@@ -384,7 +390,9 @@ ShowHeatMap:
     ; 数据量不足显示提示框
     for k, count in keyboard[date]
       CtlColors.Change(%k%, Opt.BackgroundColor, Opt.TextColor)
-    MsgBox 0x42040, , %L_gui1_msgbox%
+    ; 数据不足时，修改标题栏追加提示
+    NewTitle := BaseTitle . " | 今日按键次数较少，故暂未生成按键热点图"
+    WinSetTitle, %NewTitle%
   }
 }
 return
