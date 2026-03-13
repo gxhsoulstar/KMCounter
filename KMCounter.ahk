@@ -237,7 +237,9 @@ SaveSetting:
 return
 
 Reload:
-  Reload
+  Run, %A_ScriptFullPath%
+  Sleep 500
+  ExitApp
 return
 
 ReloadHook:
